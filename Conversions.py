@@ -5,7 +5,7 @@
 # Start by Importing needed Assets
 
 # In[151]:
-from PIL import Image, ImageFilter, ImageOps
+from PIL import Image, ImageOps
 import matplotlib.pylab as plt
 import numpy as np
 
