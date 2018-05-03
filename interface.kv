@@ -1,0 +1,19 @@
+#:kivy 1.0
+#:import Factory kivy.factory.Factory
+GridLayout:
+    cols: 3
+    Button:
+        text: 'Select File'
+        on_release: Factory.FileChoseMe().open()
+    Image:
+
+
+<FileChoseMe@Popup>:
+    title: 'Please Select An Image'
+    auto_dismiss: False
+    FileBrowser:
+        filters: ['*.bmp', '*.png', '*.pbm', '*.pgm', '*.ppm', '*.jpeg', '*.jpg', '*.jpe', '*.tiff', '*.tif']
+        on_canceled: root.dismiss()
+        on_success: app._fbrowser_success(self,root)
+
+

@@ -1,24 +1,21 @@
 # coding: utf-8
 
-# # This notebook Attempts to extract the lineart from orbitry images
-#
-# Start by Importing needed Assets
-
-# In[151]:
-from PIL import Image, ImageOps
+import PIL
 import matplotlib.pylab as plt
 import numpy as np
-
-plt.rcParams['figure.figsize'] = [20, 9]
 import cv2
 
-# In[152]:
+plt.rcParams['figure.figsize'] = [20, 9]
+
+Basephoto = cv2.imread("/Users/jfmmeyers/Google Drive/furart/lockott/photo_2018-03-24_13-54-56.jpg",
+                       cv2.IMREAD_GRAYSCALE)
 
 
-Basephoto = cv2.imread("/Users/jfmmeyers/Google Drive/furart/lockott/photo_2018-03-24_13-54-56.jpg", -1)
+class ExtractLineArt:
+    UnprocessedImage = ''
 
-
-# In[153]:
+    def __init__(self, imagePath):
+        self.UnprocessedImage = cv2.imread(imagePath, cv2.IMREAD_GRAYSCALE)
 
 
 def ConvertImageToArray(ImageData):
@@ -61,10 +58,27 @@ def RemoveShadows(Img):
     return result_norm
 
 
-# cleanup any scanner artificats
-NoShadow = RemoveShadows(Basephoto)
+def ProcessImage(InputImage, DesiredThreshold):
+    # cleanup any scanner artificats
+    NoShadow = RemoveShadows(InputImage)
+    Lineart = DarkenLines(NoShadow, DesiredThreshold)
+    ExtractedPoints = FindLines(Lineart)
+    print(ExtractedPoints)
+    DisplayDiffrences(PIL.Image.fromarray(Basephoto).convert("L"), Lineart)
 
-Threshold = 222  # the value has to be adjusted for an image of interest
-mask = Image.fromarray(NoShadow).convert("L")
-mask = mask.point(lambda i: i < Threshold and 255)
-DisplayDiffrences(Image.fromarray(Basephoto).convert("L"), ImageOps.invert(mask))
+
+def DarkenLines(InputImage, DesiredThreshold):
+    mask = InputImage
+    cv2.threshold(InputImage, DesiredThreshold, 255, cv2.THRESH_BINARY_INV, mask)
+    cv2.threshold(mask, 200, 255, cv2.THRESH_BINARY, mask)
+    # cv2.bitwise_not(mask, mask)
+    return mask
+
+
+def FindLines(InputImage):
+    contours = cv2.findContours(InputImage, cv2.RETR_LIST, cv2.CHAIN_APPROX_TC89_L1)
+
+    return contours
+
+
+ProcessImage(Basephoto, 222)
