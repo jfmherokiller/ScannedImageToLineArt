@@ -1,6 +1,5 @@
 # coding: utf-8
 
-import PIL
 import matplotlib.pylab as plt
 import numpy as np
 import cv2
@@ -28,10 +27,10 @@ def DisplayDiffrences(OldImage, NewImage):
     axarr[0].imshow(OldImage)
     axarr[0].set_title('Old Image')
 
-    axarr[1].imshow(NewImage)
+    axarr[1].imshow(NewImage, cmap='binary')
     axarr[1].set_title('New Image')
 
-    axarr[2].imshow(np.abs(ConvertImageToArray(NewImage) - ConvertImageToArray(OldImage)))
+    axarr[2].imshow(np.abs(NewImage) - OldImage)
     axarr[2].set_title('Changes')
 
     plt.suptitle('Diffrences between Changed And Original Image', fontsize=16)
@@ -64,7 +63,7 @@ def ProcessImage(InputImage, DesiredThreshold):
     Lineart = DarkenLines(NoShadow, DesiredThreshold)
     ExtractedPoints = FindLines(Lineart)
     print(ExtractedPoints)
-    DisplayDiffrences(PIL.Image.fromarray(Basephoto).convert("L"), Lineart)
+    DisplayDiffrences(Basephoto, Lineart)
 
 
 def DarkenLines(InputImage, DesiredThreshold):
