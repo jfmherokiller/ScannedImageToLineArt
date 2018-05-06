@@ -7,7 +7,7 @@ import svgwrite
 
 plt.rcParams['figure.figsize'] = [20, 9]
 
-Basephoto = cv2.imread("/Users/jfmmeyers/Google Drive/furart/lockott/photo_2018-03-24_13-54-56.jpg",
+Basephoto = cv2.imread("F:\\mygdrive\\furart\\lockott\\photo_2018-03-24_13-54-56.jpg",
                        cv2.IMREAD_GRAYSCALE)
 
 
@@ -73,7 +73,7 @@ def ProcessImage(InputImage: np.ndarray, DesiredThreshold: int):
 def DarkenLines(InputImage: np.ndarray, DesiredThreshold: int):
     mask = InputImage
     cv2.threshold(InputImage, DesiredThreshold, 255, cv2.THRESH_BINARY_INV, mask)
-    cv2.threshold(mask, 200, 255, cv2.THRESH_BINARY, mask)
+    #cv2.threshold(mask, 200, 255, cv2.THRESH_BINARY, mask)
     # cv2.bitwise_not(mask, mask)
     return mask
 
@@ -97,7 +97,7 @@ def WriteContoursToSVG(Contours: np.ndarray, FileName: str, OriginalImage: np.nd
         PointSet = []
         for PointPiece in Contour.tolist():
             PointSet.append(tuple(PointPiece[0]))
-            dwg.add(dwg.polyline(PointSet))
+            dwg.add(dwg.polyline(PointSet, fill='none', stroke='black'))
     # save svg here outside of loop
     dwg.save()
 
